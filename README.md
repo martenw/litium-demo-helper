@@ -2,6 +2,8 @@
 
 This project is an implementation of a [Litium Test Project](https://kc.litiumstudio.se/documentation/get-started/setting_up_a_test_project) with utilities that can be used to quickly get a Litium Demo environment set up.
 
+[Description on usage can be found in this series of blogposts](https://blog.gooser.se/post/170796148634/setting-up-a-litium-customer-demo-part-1-excel)
+
 ## Getting started
 
 1. Add the project to your accelerator solution
