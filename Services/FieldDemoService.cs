@@ -20,7 +20,7 @@ namespace Litium.Accelerator.Demo.Services
 
         public void AddTextField(string fieldName, bool baseProductfield, string fieldGroup, string templateName)
         {
-            var fieldDefinition = new FieldDefinition(fieldName, SystemFieldTypeConstants.Text)
+            var fieldDefinition = new FieldDefinition<ProductArea>(fieldName, SystemFieldTypeConstants.Text)
             {
                 CanBeGridColumn = false,
                 CanBeGridFilter = false,
@@ -47,7 +47,7 @@ namespace Litium.Accelerator.Demo.Services
                 Name = new Dictionary<string, string> { { "en-US", option }, { "sv-SE", option } }
             }).ToList();
 
-            var fieldDefinition = new FieldDefinition(fieldName, SystemFieldTypeConstants.TextOption)
+            var fieldDefinition = new FieldDefinition<ProductArea>(fieldName, SystemFieldTypeConstants.TextOption)
             {
                 CanBeGridColumn = true,
                 CanBeGridFilter = true,
@@ -68,7 +68,7 @@ namespace Litium.Accelerator.Demo.Services
 
         private FieldDefinition CreateField(FieldDefinition fieldDefinition)
         {
-            var currentField = _fieldDefinitionService.Get(fieldDefinition.Id);
+            var currentField = _fieldDefinitionService.Get<ProductArea>(fieldDefinition.Id);
             if (currentField != null)
             {
                 // Update options of the field even if the field already exists
@@ -83,7 +83,7 @@ namespace Litium.Accelerator.Demo.Services
             }
 
             _fieldDefinitionService.Create(fieldDefinition);
-            return _fieldDefinitionService.Get(fieldDefinition.Id);
+            return _fieldDefinitionService.Get<ProductArea>(fieldDefinition.Id);
         }
 
         private void AddToTemplate(string templateName, bool baseProductfield, string fieldGroup, FieldDefinition currentField)

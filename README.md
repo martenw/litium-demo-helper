@@ -15,12 +15,12 @@ This project is an implementation of a [Litium Test Project](https://kc.litiumst
 
 #### ```Litium.Accelerator.Demo.PimDataModel.CreateFields()```
 Used to quickly setup fields in existing field templateds in 
-PIM. Chreate `InlineData` for each field that should be 
+PIM. Create `InlineData` for each field that should be 
 generated. Sample field definitions can be found in the codefile.
 
 #### ```Litium.Accelerator.Demo.ProductInformation.MoveProductsIntoCategories()```
 Create the a PIM Category structure by reading category information found as field data on the products. It is 
-necessary to modify the method `GetCategoryTrees()`before 
+necessary to modify the method `GetCategoryTrees()` before 
 running the method to set up how category information should
 be read from the product.
 
