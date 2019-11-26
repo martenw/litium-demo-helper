@@ -4,9 +4,7 @@ using Litium.Runtime.DependencyInjection;
 
 namespace Litium.Accelerator.Demo.Services
 {
-    [Service(
-        ServiceType = typeof(IProductDemoService),
-        Lifetime = DependencyLifetime.Singleton)]
+    [Service(ServiceType = typeof(IProductDemoService), Lifetime = DependencyLifetime.Singleton)]
     public interface IProductDemoService
     {
         List<BaseProduct> GetAllBaseProducts();

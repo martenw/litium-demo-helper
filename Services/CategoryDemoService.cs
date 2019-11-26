@@ -55,7 +55,7 @@ namespace Litium.Accelerator.Demo.Services
             if (!categoryTree.Any())
                 return null;
 
-	        var categoryKey = assortment.Id + string.Join("---", categoryTree);
+	        var categoryKey = assortment.Id + "---" + string.Join("---", categoryTree);
 
 			try
 	        {
@@ -69,7 +69,7 @@ namespace Litium.Accelerator.Demo.Services
 			        return null;
 
 		        var rootCategories = _categoryService.GetChildCategories(Guid.Empty, assortment.SystemId);
-		        var rootCategory = rootCategories.FirstOrDefault(c => c.Id?.Equals(categoryName, StringComparison.InvariantCultureIgnoreCase) ?? false);
+		        var rootCategory = rootCategories.FirstOrDefault(c => c.Id?.Equals(Uri.EscapeDataString(categoryName), StringComparison.InvariantCultureIgnoreCase) ?? false);
 		        if (rootCategory == null)
 			        rootCategory = CreateCategory(categoryName, Uri.EscapeDataString(categoryName), assortment, null);
 

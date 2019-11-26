@@ -26,3 +26,6 @@ be read from the product.
 
 #### ```Litium.Accelerator.Demo.ProductInformation.PublishEverything()```
 Does what it sounds like, publishes everything everywhere. Or more specifically connects every category and variant to every website.
+
+#### ```Litium.Accelerator.Demo.PageInformation.PublishEverything()```
+Does what it sounds like, publishes everything everywhere. Or more specifically publishes every cms page in every channel.
