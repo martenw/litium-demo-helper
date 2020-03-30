@@ -4,6 +4,8 @@ This project is an implementation of a [Litium Test Project](https://kc.litiumst
 
 [Description on usage can be found in this series of blogposts](https://blog.gooser.se/post/170796148634/setting-up-a-litium-customer-demo-part-1-excel)
 
+**Tested in Litium version 7.4.0**
+
 ## Getting started
 
 1. Add the project to your accelerator solution

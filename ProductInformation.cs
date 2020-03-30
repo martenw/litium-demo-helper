@@ -52,6 +52,7 @@ namespace Litium.Accelerator.Demo
             var productDemoService = IoC.Resolve<IProductDemoService>();
             var categoryDemoService = IoC.Resolve<ICategoryDemoService>();
             var assortmentService = IoC.Resolve<AssortmentService>();
+            var categoryService = IoC.Resolve<CategoryService>();
             var assortment = assortmentService.GetAll().First();
             Assert.NotNull(assortment);
 
@@ -60,7 +61,7 @@ namespace Litium.Accelerator.Demo
                 foreach (var baseProduct in productDemoService.GetAllBaseProducts())
                 {
                     // Skip products already connected to any category
-                    if (baseProduct.CategoryLinks.Any())
+                    if (categoryService.GetByBaseProduct(baseProduct.SystemId).Any())
                         continue;
 
                     // Get which category the product should be placed in, 
@@ -92,8 +93,8 @@ namespace Litium.Accelerator.Demo
             using (FoundationContext.Current.SystemToken.Use())
             {
                 foreach (var assortment in assortmentService.GetAll())
-                foreach (var assortmentTopLevelCategory in categoryService.GetChildCategories(Guid.Empty, assortment.SystemId))
-                    categoryDemoService.PublishRecursive(assortmentTopLevelCategory);
+                    foreach (var assortmentTopLevelCategory in categoryService.GetChildCategories(Guid.Empty, assortment.SystemId))
+                        categoryDemoService.PublishRecursive(assortmentTopLevelCategory);
             }
         }
     }

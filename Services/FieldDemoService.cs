@@ -18,13 +18,13 @@ namespace Litium.Accelerator.Demo.Services
             _fieldTemplateService = fieldTemplateService;
         }
 
-        public void AddTextField(string fieldName, bool baseProductfield, string fieldGroup, string templateName)
+        public void AddTextField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, bool multiCulture)
         {
             var fieldDefinition = new FieldDefinition<ProductArea>(fieldName, SystemFieldTypeConstants.Text)
             {
                 CanBeGridColumn = false,
                 CanBeGridFilter = false,
-                MultiCulture = false,
+                MultiCulture = multiCulture,
                 Localizations =
                 {
                     ["en-US"] = {Name = fieldName, Description = fieldName},

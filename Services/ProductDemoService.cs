@@ -12,12 +12,14 @@ namespace Litium.Accelerator.Demo.Services
         private readonly BaseProductService _baseProductService;
         private readonly FieldTemplateService _fieldTemplateService;
         private readonly VariantService _variantService;
+        private readonly CategoryService _categoryService;
 
-        public ProductDemoService(BaseProductService baseProductService, FieldTemplateService fieldTemplateService, VariantService variantService)
+        public ProductDemoService(BaseProductService baseProductService, FieldTemplateService fieldTemplateService, VariantService variantService, CategoryService categoryService)
         {
             _baseProductService = baseProductService;
             _fieldTemplateService = fieldTemplateService;
             _variantService = variantService;
+            _categoryService = categoryService;
         }
 
         public List<BaseProduct> GetAllBaseProducts()
@@ -30,19 +32,20 @@ namespace Litium.Accelerator.Demo.Services
 
         public void AddToCategory(BaseProduct baseProduct, Category category)
         {
-            var linkAlreadyExist = baseProduct.CategoryLinks.Any(l => l.CategorySystemId.Equals(category.SystemId));
+            var linkAlreadyExist = category.ProductLinks.Any(l => l.BaseProductSystemId.Equals(baseProduct.SystemId));
             if (linkAlreadyExist)
                 return;
 
-            var tmpBaseProduct = baseProduct.MakeWritableClone();
             var variants = _variantService.GetByBaseProduct(baseProduct.SystemId).ToList();
             var variantSystemIds = new HashSet<Guid>(variants.Select(v => v.SystemId));
-            var link = new BaseProductToCategoryLink(category.SystemId)
+            var link = new CategoryToProductLink(baseProduct.SystemId)
             {
                 ActiveVariantSystemIds = variantSystemIds
             };
-            tmpBaseProduct.CategoryLinks.Add(link);
-            _baseProductService.Update(tmpBaseProduct);
+
+            var tmpCategory = category.MakeWritableClone();
+            tmpCategory.ProductLinks.Add(link);
+            _categoryService.Update(tmpCategory);
         }
     }
 }
