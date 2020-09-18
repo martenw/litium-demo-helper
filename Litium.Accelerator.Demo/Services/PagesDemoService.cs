@@ -1,24 +1,29 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using JetBrains.Annotations;
 using Litium.Blocks;
+using Litium.FieldFramework;
 using Litium.Globalization;
 using Litium.Websites;
+using Xunit.Abstractions;
 
 namespace Litium.Accelerator.Demo.Services
 {
     public class PagesDemoService : IPagesDemoService
     {
-        private readonly BlockService _blockService;
+        private readonly DraftBlockService _draftBlockService;
+        private readonly DraftPageService _draftPageService;
         private readonly PageService _pageService;
 
-        public PagesDemoService(PageService pageService, BlockService blockService)
+        public PagesDemoService(PageService pageService, DraftBlockService draftBlockService, DraftPageService draftPageService)
         {
             _pageService = pageService;
-            _blockService = blockService;
+            _draftBlockService = draftBlockService;
+            _draftPageService = draftPageService;
         }
 
-        public void PublishContent([NotNull] Website website, [NotNull] Channel channel)
+        public void PublishContent([NotNull] Website website, [NotNull] Channel channel, ITestOutputHelper output)
         {
             if (website == null)
                 throw new ArgumentNullException(nameof(website));
@@ -32,41 +37,45 @@ namespace Litium.Accelerator.Demo.Services
             var rootPages = _pageService.GetChildPages(Guid.Empty, website.SystemId);
 
             foreach (var page in rootPages)
-                PublishRecursive(page, channel);
+                PublishRecursive(page, channel, output);
         }
 
-        private void PublishRecursive(Page page, Channel channel)
+        private void PublishRecursive(Page page, Channel channel, ITestOutputHelper output)
         {
-            var pageConnectionExists = page.ChannelLinks.Any(link => link.ChannelSystemId.Equals(channel.SystemId));
+            var draftPage = _draftPageService.Get(page.SystemId).MakeWritableClone();
+            var pageConnectionExists = draftPage.ChannelLinks.Any(link => link.ChannelSystemId.Equals(channel.SystemId));
             if (!pageConnectionExists)
             {
-                var writePage = page.MakeWritableClone();
-                writePage.ChannelLinks.Add(new PageToChannelLink(channel.SystemId));
-                _pageService.Update(writePage);
+                // var writePage = page.MakeWritableClone();
+                draftPage.ChannelLinks.Add(new DraftPageToChannelLink(channel.SystemId));
+                output.WriteLine($"Connecting page '{draftPage.Fields[SystemFieldDefinitionConstants.Name, CultureInfo.CurrentUICulture]}' to channel '{channel.Fields[SystemFieldDefinitionConstants.Name, CultureInfo.CurrentUICulture]}'");
             }
 
             // Publish all blocks on the page
-            foreach (var blockContainer in page.Blocks)
+            foreach (var blockContainer in draftPage.Blocks)
             foreach (var blockItem in blockContainer.Items.OfType<BlockItemLink>())
                 PublishBlock(blockItem.BlockSystemId, channel);
 
+            _draftPageService.Update(draftPage);
+            _draftPageService.Publish(draftPage);
+
             foreach (var childPage in _pageService.GetChildPages(page.SystemId))
-                PublishRecursive(childPage, channel);
+                PublishRecursive(childPage, channel, output);
         }
 
         private void PublishBlock(Guid blockSystemId, Channel channel)
         {
-            var block = _blockService.Get(blockSystemId);
-            if (block == null)
+            var draftBlock = _draftBlockService.Get(blockSystemId).MakeWritableClone();
+            if (draftBlock == null)
                 return;
 
-            var blockConnectionExists = block.ChannelLinks.Any(link => link.ChannelSystemId.Equals(channel.SystemId));
+            var blockConnectionExists = draftBlock.ChannelLinks.Any(link => link.ChannelSystemId.Equals(channel.SystemId));
             if (blockConnectionExists)
                 return;
 
-            var writeBlock = block.MakeWritableClone();
-            writeBlock.ChannelLinks.Add(new BlockToChannelLink(channel.SystemId));
-            _blockService.Update(writeBlock);
+            draftBlock.ChannelLinks.Add(new DraftBlockToChannelLink(channel.SystemId));
+            _draftBlockService.Update(draftBlock);
+            _draftBlockService.Publish(draftBlock);
         }
     }
 }

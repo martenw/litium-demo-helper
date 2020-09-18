@@ -7,6 +7,8 @@ namespace Litium.Accelerator.Demo.Services
         Lifetime = DependencyLifetime.Singleton)]
     public interface IFieldDemoService
     {
+        void AddDecimalField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, bool multiCulture);
+        void AddIntField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, bool multiCulture);
         void AddTextField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, bool multiCulture);
         void AddTextOptionField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, string options);
     }

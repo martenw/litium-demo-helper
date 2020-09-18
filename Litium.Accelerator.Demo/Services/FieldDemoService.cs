@@ -18,9 +18,9 @@ namespace Litium.Accelerator.Demo.Services
             _fieldTemplateService = fieldTemplateService;
         }
 
-        public void AddTextField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, bool multiCulture)
+        private FieldDefinition<ProductArea> CreateFieldDefinition(string fieldName, bool multiCulture, string fieldType)
         {
-            var fieldDefinition = new FieldDefinition<ProductArea>(fieldName, SystemFieldTypeConstants.Text)
+            var fieldDefinition = new FieldDefinition<ProductArea>(fieldName, fieldType)
             {
                 CanBeGridColumn = false,
                 CanBeGridFilter = false,
@@ -32,11 +32,28 @@ namespace Litium.Accelerator.Demo.Services
                 }
             };
 
-            var field = CreateField(fieldDefinition);
-            AddToTemplate(templateName, baseProductfield, fieldGroup, field);
+            return fieldDefinition;
         }
 
-        public void AddTextOptionField(string fieldName, bool baseProductfield, string fieldGroup, string templateName, string options)
+        public void AddDecimalField(string fieldName, bool baseProductField, string fieldGroup, string templateName, bool multiCulture)
+        {
+            var field = CreateField(CreateFieldDefinition(fieldName, multiCulture, SystemFieldTypeConstants.Decimal));
+            AddToTemplate(templateName, baseProductField, fieldGroup, field);
+        }
+
+        public void AddIntField(string fieldName, bool baseProductField, string fieldGroup, string templateName, bool multiCulture)
+        {
+            var field = CreateField(CreateFieldDefinition(fieldName, multiCulture, SystemFieldTypeConstants.Int));
+            AddToTemplate(templateName, baseProductField, fieldGroup, field);
+        }
+
+        public void AddTextField(string fieldName, bool baseProductField, string fieldGroup, string templateName, bool multiCulture)
+        {
+            var field = CreateField(CreateFieldDefinition(fieldName, multiCulture, SystemFieldTypeConstants.Text));
+            AddToTemplate(templateName, baseProductField, fieldGroup, field);
+        }
+
+        public void AddTextOptionField(string fieldName, bool baseProductField, string fieldGroup, string templateName, string options)
         {
             if (string.IsNullOrEmpty(options))
                 throw new Exception("Cannot create options field withot options");
@@ -63,7 +80,7 @@ namespace Litium.Accelerator.Demo.Services
                 }
             };
             var field = CreateField(fieldDefinition);
-            AddToTemplate(templateName, baseProductfield, fieldGroup, field);
+            AddToTemplate(templateName, baseProductField, fieldGroup, field);
         }
 
         private FieldDefinition CreateField(FieldDefinition fieldDefinition)

@@ -26,6 +26,16 @@ namespace Litium.Accelerator.Demo
             {
                 switch (fieldType)
                 {
+                    case SystemFieldTypeConstants.Decimal:
+                        if (!string.IsNullOrEmpty(options))
+                            throw new Exception("Remove defined options for int field");
+                        demoService.AddDecimalField(fieldName, baseProductfield, fieldGroup, templateName, multiCulture);
+                        break;
+                    case SystemFieldTypeConstants.Int:
+                        if (!string.IsNullOrEmpty(options))
+                            throw new Exception("Remove defined options for int field");
+                        demoService.AddIntField(fieldName, baseProductfield, fieldGroup, templateName, multiCulture);
+                        break;
                     case SystemFieldTypeConstants.Text:
                         if (!string.IsNullOrEmpty(options))
                             throw new Exception("Remove defined options for text field");
