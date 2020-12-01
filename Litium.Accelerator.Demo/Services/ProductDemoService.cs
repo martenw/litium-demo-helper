@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Litium.FieldFramework;
+using Litium.Foundation.Modules.ExtensionMethods;
 using Litium.Products;
 
 namespace Litium.Accelerator.Demo.Services
@@ -10,9 +11,9 @@ namespace Litium.Accelerator.Demo.Services
 
     {
         private readonly BaseProductService _baseProductService;
+        private readonly CategoryService _categoryService;
         private readonly FieldTemplateService _fieldTemplateService;
         private readonly VariantService _variantService;
-        private readonly CategoryService _categoryService;
 
         public ProductDemoService(BaseProductService baseProductService, FieldTemplateService fieldTemplateService, VariantService variantService, CategoryService categoryService)
         {
@@ -40,8 +41,12 @@ namespace Litium.Accelerator.Demo.Services
             var variantSystemIds = new HashSet<Guid>(variants.Select(v => v.SystemId));
             var link = new CategoryToProductLink(baseProduct.SystemId)
             {
+                BaseProductSystemId = baseProduct.SystemId,
                 ActiveVariantSystemIds = variantSystemIds
             };
+
+            if (baseProduct.GetMainCategory(null) == null)
+                link.MainCategory = true;
 
             var tmpCategory = category.MakeWritableClone();
             tmpCategory.ProductLinks.Add(link);

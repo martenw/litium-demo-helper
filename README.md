@@ -4,7 +4,7 @@ This project is an implementation of a [Litium Test Project](https://kc.litiumst
 
 [Description on usage can be found in this series of blogposts](https://leanbyte.tumblr.com/post/170796148634/setting-up-a-litium-customer-demo-part-1-excel)
 
-**Tested in Litium version 7.4.0**
+**Tested in Litium version 7.5.0**
 
 ## Getting started
 
